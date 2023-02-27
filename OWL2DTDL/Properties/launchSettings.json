@@ -2,7 +2,7 @@
   "profiles": {
     "OWL2DTDL": {
       "commandName": "Project",
-      "commandLineArgs": "-u https://w3id.org/rec/full/3.3/ -i ./RecIgnoredNames.csv -o C:\\Users\\karlh\\Scratch\\Git\\opendigitaltwins-building\\Ontology"
+      "commandLineArgs": "-f C:\\Users\\Julian.Emde\\Repositories\\DZ-Filstalbruecken-Initializer\\OWL\\Schiene_1.0.owl -o C:\\Users\\Julian.Emde\\Repositories\\_data -s mkp"
     }
   }
 }
