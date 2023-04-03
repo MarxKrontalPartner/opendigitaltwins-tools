@@ -4,13 +4,15 @@ using Azure.DigitalTwins.Core;
 using Azure.Identity;
 using CommandLine;
 using Ganss.IO;
-using Microsoft.Azure.DigitalTwins.Parser;
+using DTDLParser;
+using DTDLParser.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Azure.Core;
 
 namespace UploadModels
 {
@@ -81,7 +83,23 @@ namespace UploadModels
             Log.Write("Uploaded interfaces:");
             try
             {
-                var credential = new InteractiveBrowserCredential(options.TenantId, options.ClientId);
+                TokenCredential credential;
+                if (options.UseDefaultAzureCredentials)
+                {
+                    credential = new DefaultAzureCredential();
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(options.ClientSecret))
+                    {
+                        credential = new InteractiveBrowserCredential(options.TenantId, options.ClientId);
+                    }
+                    else
+                    {
+                        credential = new ClientSecretCredential(options.TenantId, options.ClientId, options.ClientSecret);
+                    }
+                }
+
                 var client = new DigitalTwinsClient(new UriBuilder("https", options.HostName).Uri, credential);
 
                 for (int i = 0; i < (orderedInterfaces.Count() / options.BatchSize) + 1; i++)
@@ -113,14 +131,14 @@ namespace UploadModels
 
         private static bool ParseModelJson(Dictionary<string, string> modelTexts)
         {
-            var jsonErrors = new Dictionary<string, System.Text.Json.JsonException>();
+            var jsonErrors = new Dictionary<string, JsonException>();
             foreach (string fileName in modelTexts.Keys)
             {
                 try
                 {
                     JsonDocument jsonDoc = JsonDocument.Parse(modelTexts[fileName]);
                 }
-                catch (System.Text.Json.JsonException ex)
+                catch (JsonException ex)
                 {
                     jsonErrors.Add(fileName, ex);
                 }
@@ -138,13 +156,13 @@ namespace UploadModels
             return jsonErrors.Count == 0;
         }
 
-        private static async Task<IReadOnlyDictionary<Dtmi, DTEntityInfo>> ParseModelsAsync(Dictionary<string, string> modelTexts)
+        private async Task<IReadOnlyDictionary<Dtmi, DTEntityInfo>> ParseModelsAsync(Dictionary<string, string> modelTexts)
         {
             IReadOnlyDictionary<Dtmi, DTEntityInfo> entities = null;
             try
             {
-                var parser = new ModelParser();
-                entities = await parser.ParseAsync(modelTexts.Values);
+                var parser = new ModelParser(new ParsingOptions() { AllowUndefinedExtensions = options.AllowUndefinedExtensions });
+                entities = await parser.ParseAsync(modelTexts.Values.ToAsyncEnumerable());
             }
             catch (ParsingException ex)
             {

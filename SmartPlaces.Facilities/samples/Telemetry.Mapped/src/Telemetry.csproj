@@ -13,7 +13,7 @@
     <PackageReference Include="Azure.Messaging.EventHubs" Version="5.7.3" />
     <PackageReference Include="Azure.Messaging.EventHubs.Processor" Version="5.7.3" />
     <PackageReference Include="coverlet.collector" Version="3.1.0" />
-    <PackageReference Include="Mapped.PB" Version="0.29.6.12" />
+    <PackageReference Include="Mapped.PB" Version="0.33.4.15" />
     <PackageReference Include="Microsoft.ApplicationInsights.WorkerService" Version="2.21.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="6.0.1" />
@@ -23,7 +23,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
-    <PackageReference Include="Microsoft.SmartPlaces.Facilities.IngestionManager" Version="0.3.10-preview" />
+    <PackageReference Include="Microsoft.SmartPlaces.Facilities.IngestionManager" Version="0.3.12-preview" />
     <PackageReference Include="Polly" Version="7.2.3" />
   </ItemGroup>
 
